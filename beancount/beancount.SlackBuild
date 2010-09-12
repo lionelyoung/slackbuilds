@@ -69,7 +69,7 @@ cp -a \
   COPYING CHANGES README TODO \
   $PKG/usr/doc/$PRGNAM-$VERSION
 cp -aR \
-  index.html style.css doc examples \
+  index.html doc examples \
   $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
