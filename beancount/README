@@ -1,0 +1,7 @@
+Beancount is a double-entry accounting system that uses a simple text file format as input.  A few Python scripts are used to parse the contents of the file, for example, to serve the contents as a locally running web server.  Scripts are provided to convert from OFX files into Ledger input format, and other formats (easily extensible).
+
+The ideas and syntax is entirely inspired by John Wiegley's Ledger, and the syntax is pretty much compatible with it. Beancount's syntax is a subset of Ledger (a little more restrictive), with a few additional directives. You should probably read Ledger's documentation in order to you use Beancount: http://github.com/downloads/jwiegley/ledger/ledger.pdf
+
+Beancount provides a simple web front to view the contents of the database, so you don't have to parse the entire file everytime you want to view a different account (this helps mitigate the fact that parsing is comparatively slow).
+
+Homepage: http://furius.ca/beancount/
