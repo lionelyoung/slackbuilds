@@ -2,6 +2,7 @@ FlexGet is a multipurpose automation tool for content like torrents, nzbs, podca
 
 FlexGet is extremely useful in conjunction with applications which have watch directory support, such as rtorrent.
 
-Requires: FeedParser, SQLAlchemy, PyYAML, BeautifulSoup, html5lib, PyRSS2Gen, pynzb, progressbar
+Requires: FeedParser, SQLAlchemy, PyYAML, BeautifulSoup, html5lib, PyRSS2Gen,
+pynzb, progressbar and nose
 
 http://flexget.com
