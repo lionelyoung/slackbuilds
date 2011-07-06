@@ -1,0 +1,129 @@
+#!/bin/bash
+CWD=`pwd`
+TMP=${TMP:-/tmp}
+PKG=$TMP/package-python
+rm -rf $PKG
+mkdir -p $PKG
+
+VERSION=2.5.6
+ARCH=${ARCH:-x86_64}
+BUILD=${BUILD:-2_ly}
+
+if [ "$ARCH" = "i486" ]; then
+  LIBDIRSUFFIX=""
+elif [ "$ARCH" = "s390" ]; then
+  LIBDIRSUFFIX=""
+elif [ "$ARCH" = "x86_64" ]; then
+  LIBDIRSUFFIX="64"
+elif [ "$ARCH" = "arm" ]; then
+  LIBDIRSUFFIX=""
+elif [ "$ARCH" = "armel" ]; then
+  LIBDIRSUFFIX=""
+fi
+# Location for Python site-packages:
+SITEPK=$PKG/usr/lib${LIBDIRSUFFIX}/python2.5/site-packages
+# same as above without $PKG
+TOOLSDIR=/usr/lib${LIBDIRSUFFIX}/python2.5/site-packages
+
+# Normally I don't trust -O3, but it is the Python default so
+# I'll assume that in this case it has been well tested.
+if [ "$ARCH" = "i386" ]; then
+  SLKCFLAGS="-O3 -march=i386 -mcpu=i686"
+elif [ "$ARCH" = "i486" ]; then
+  SLKCFLAGS="-O3 -march=i486 -mtune=i686"
+elif [ "$ARCH" = "s390" ]; then
+  SLKCFLAGS="-O3"
+elif [ "$ARCH" = "x86_64" ]; then
+  SLKCFLAGS="-O3"
+fi
+
+cd $TMP
+rm -rf Python-$VERSION
+tar xvf $CWD/Python-$VERSION.tgz || exit 1
+
+cd Python-$VERSION
+
+# Security patches:
+#zcat $CWD/patches/CVE-2008-1679-1721.diff.gz | patch -p1 --verbose --backup --suffix=.orig || exit 1
+#zcat $CWD/patches/CVE-2008-3144.diff.gz | patch -p1 --verbose --backup --suffix=.orig || exit 1
+#zcat $CWD/patches/CVE-2008-3142.diff.gz | patch -p1 --verbose --backup --suffix=.orig || exit 1
+#zcat $CWD/patches/CVE-2008-2316.diff.gz | patch -p1 --verbose --backup --suffix=.orig || exit 1
+#zcat $CWD/patches/CVE-2008-2315.diff.gz | patch -p1 --verbose --backup --suffix=.orig || exit 1
+
+# Clean up after the patches:
+#find . -name "*.orig" -exec rm "{}" \;
+
+chown -R root:root .
+find . -type d -exec chmod 755 {} \;
+find . -type f -perm 775 -exec chmod 755 {} \;
+find . -type f -perm 664 -exec chmod 644 {} \;
+find . -type d -name CVS -exec rm -r {} \;
+
+OPT="$SLKCFLAGS" \
+./configure \
+  --prefix=/usr \
+  --libdir=/usr/lib${LIBDIRSUFFIX} \
+  --mandir=/usr/man \
+  --with-ncurses \
+  --with-threads \
+  --enable-ipv6 \
+  --enable-shared \
+  --build=$ARCH-slackware-linux
+
+make -j4 || exit 1
+make install DESTDIR=$PKG
+
+# Install some python-demo files:
+mkdir -p $PKG/usr/doc/python-$VERSION
+cp -a Demo $PKG/usr/doc/python-$VERSION
+
+# We'll install the python-tools under site-packages:
+mkdir -p $SITEPK
+( cd Tools ; cp -a * $SITEPK )
+mkdir -p $PKG/usr/doc/python-$VERSION
+mv $SITEPK/README $PKG/usr/doc/python-$VERSION/README.python-tools
+( cd $PKG/usr/doc/python-$VERSION
+  ln -sf $TOOLSDIR Tools
+)
+# Make a few useful symlinks:
+#mkdir -p $PKG/usr/bin
+#( cd $PKG/usr/bin
+  #ln -sf $TOOLSDIR/modulator/modulator.py modulator
+  #ln -sf $TOOLSDIR/pynche/pynche pynche
+  #ln -sf $TOOLSDIR/i18n/msgfmt.py .
+  #ln -sf $TOOLSDIR/i18n/pygettext.py .
+#)
+
+# Install docs:
+mkdir -p $PKG/usr/doc/python-$VERSION
+cp -a README $PKG/usr/doc/python-$VERSION
+cp -a Misc $PKG/usr/doc/python-$VERSION
+#( cd $PKG/usr/doc/python-$VERSION ; mkdir html )
+#( cd $PKG/usr/doc/python-$VERSION/html
+  #tar xjvf $CWD/html-$VERSION.tar.bz2
+  #chown -R root:root .
+#)
+#( cd $PKG/usr/bin
+  #rm -f python
+  #ln -sf python2.5 python
+#)
+( cd $PKG
+  find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null
+  find . | xargs file | grep "shared object" | grep ELF | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null
+)
+#gzip -9 $PKG/usr/man/man1/*.?
+# Clean up stuff that will be overwritten
+
+rm $PKG/usr/bin/python-config
+#rm $PKG/usr/man/man1/python.1.gz
+rm $PKG/usr/bin/idle
+rm $PKG/usr/bin/python
+rm $PKG/usr/bin/pydoc
+rm $PKG/usr/bin/smtpd.py
+
+mkdir -p $PKG/install
+cat $CWD/slack-desc > $PKG/install/slack-desc
+
+cd $PKG
+makepkg -l y -c n $TMP/python-$VERSION-$ARCH-$BUILD.tgz
+
