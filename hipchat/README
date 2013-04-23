@@ -1,0 +1,6 @@
+Hipchat is a private group messaging service.
+
+Repackages the 32 or 64-bit binaries, and creates the missing symlink to the
+hash of /etc/ssl/certs/DigiCert_High_Assurance_EV_Root_CA.pem
+
+http://hipchat.com/linux
