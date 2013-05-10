@@ -6,9 +6,9 @@
 # Based on http://slackbuilds.org/template.SlackBuild
 
 PRGNAM=hipchat
-VERSION=${VERSION:-1.96.524.1}
+VERSION=${VERSION:-1.96.524.1} # Ephemeral version
 BUILD=${BUILD:-1}
-TAG=${TAG:-_SBo}	# "_SBo" is required for submission to slackbuilds.org
+TAG=${TAG:-_SBo}
 
 # Automatically determine the architecture we're building on:
 if [ -z "$ARCH" ]; then
@@ -27,10 +27,13 @@ OUTPUT=${OUTPUT:-/tmp}
 
 set -e # Exit on most errors
 
+# Get the real version
+REAL_VER=$(tar -J --to-stdout --extract --file=$PRGNAM-$ARCH.tar.xz .PKGINFO | grep pkgver | awk '{print $3}' | tr '-' '.')
+
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-rm -rf $PRGNAM-$VERSION
+rm -rf $PRGNAM-$REAL_VER
 tar xJvf $CWD/$PRGNAM-$ARCH.tar.xz
 chown -R root:root .
 
@@ -45,8 +48,8 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" \
 true
 
 # Copy program documentation into the package
-mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+mkdir -p $PKG/usr/doc/$PRGNAM-$REAL_VER
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$REAL_VER/$PRGNAM.SlackBuild
 
 # Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
 mkdir -p $PKG/install
@@ -55,4 +58,4 @@ cat $CWD/slack-desc > $PKG/install/slack-desc
 
 # Make the package
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$REAL_VER-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
