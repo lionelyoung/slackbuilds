@@ -6,7 +6,7 @@
 # Based on http://slackbuilds.org/template.SlackBuild
 
 PRGNAM=hipchat
-VERSION=${VERSION:-1.95.444}
+VERSION=${VERSION:-1.96.524.1}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}	# "_SBo" is required for submission to slackbuilds.org
 
@@ -31,7 +31,7 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xJvf $CWD/$PRGNAM-$VERSION-$ARCH.pkg.tar.xz
+tar xJvf $CWD/$PRGNAM-$ARCH.tar.xz
 chown -R root:root .
 
 # Install it into the $PKG directory
