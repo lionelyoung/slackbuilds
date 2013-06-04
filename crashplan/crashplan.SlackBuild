@@ -7,7 +7,7 @@
 
 PRGNAM=crashplan	
 SRCNAM=CrashPlan	
-VERSION=${VERSION:-3.0.3}
+VERSION=${VERSION:-3.5.3}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
 TARGETDIR=/opt/crashplan
@@ -57,7 +57,7 @@ echo "INITDIR=/etc/rc.d" >> $PKG/${TARGETDIR}/install.vars
 echo "RUNLVLDIR=/etc/rc.d" >> $PKG/${TARGETDIR}/install.vars
 NOW=`date +%Y%m%d`
 echo "INSTALLDATE=$NOW" >> $PKG/${TARGETDIR}/install.vars
-cat .defaults >> $PKG/${TARGETDIR}/install.vars
+cat install.defaults >> $PKG/${TARGETDIR}/install.vars
 JAVACOMMON=`which java`
 echo "JAVACOMMON=${JAVACOMMON}" >> $PKG/${TARGETDIR}/install.vars
 
