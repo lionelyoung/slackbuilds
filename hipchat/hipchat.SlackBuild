@@ -6,7 +6,7 @@
 # Based on http://slackbuilds.org/template.SlackBuild
 
 PRGNAM=hipchat
-VERSION=${VERSION:-1.97.593.1} # Ephemeral version
+VERSION=${VERSION:-1.97.610.1} # Ephemeral version
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
 
@@ -32,30 +32,29 @@ REAL_VER=$(tar -J --to-stdout --extract --file=$PRGNAM-$ARCH.tar.xz .PKGINFO | g
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
-cd $TMP
-rm -rf $PRGNAM-$REAL_VER
-tar xJvf $CWD/$PRGNAM-$ARCH.tar.xz
-chown -R root:root .
 
-# Install it into the $PKG directory
-mkdir -p etc/ssl/certs
-ln -s /etc/ssl/certs/DigiCert_High_Assurance_EV_Root_CA.pem etc/ssl/certs/81b9768f.0
-mv opt usr etc $PKG
+tar xvf $CWD/$PRGNAM-$ARCH.tar.xz -C $PKG
+chown -R root:root $PKG
 
-# Strip binaries and libraries
+# Create missing symlink for cert
+mkdir -p $PKG/etc/ssl/certs
+ln -s DigiCert_High_Assurance_EV_Root_CA.pem $PKG/etc/ssl/certs/81b9768f.0
+
+# Fix permissions on libraries
+find $PKG -name "*\.so*" -type f -exec chmod 0755 {} \;
+
+# Remove some cruft
+rm -f $PKG/.PKGINFO
+
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" \
-  | grep ELF | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null ||
-true
+  | grep ELF | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
-# Copy program documentation into the package
 mkdir -p $PKG/usr/doc/$PRGNAM-$REAL_VER
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$REAL_VER/$PRGNAM.SlackBuild
 
-# Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
-[ -f $CWD/doinst.sh ] && cat $CWD/doinst.sh > $PKG/install/doinst.sh
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
-# Make the package
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$REAL_VER-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
