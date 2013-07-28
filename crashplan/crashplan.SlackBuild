@@ -56,8 +56,9 @@ mkdir -p $PKG/usr/share/applications/
 mkdir -p $PKG/$MANIFESTDIR
 
 # Expand the archive
-(cd $PKG/$TARGETDIR
-cat $TMP/$SRCNAM-install/${SRCNAM}_${VERSION}.cpi | gzip -d -c - | cpio -i --no-preserve-owner)
+( cd $PKG/$TARGETDIR
+  cat $TMP/$SRCNAM-install/${SRCNAM}_${VERSION}.cpi | gzip -d -c - | cpio -i --no-preserve-owner
+)
 
 # Make the log file world writable
 chmod 777 $PKG/$TARGETDIR/log
