@@ -47,7 +47,7 @@ cat << EOF
   You must have a plex user to run this script
 
   # groupadd -g $PLEX_USER plex
-  # useradd -u $PLEX_USER -d /var/lib/plex -s /bin/false -g plex plex
+  # useradd -u $PLEX_USER -d /var/lib/$PRGNAM -s /bin/false -g plex plex
 
 EOF
 
