@@ -1,0 +1,10 @@
+The Silver Searcher is a code searching tool with a focus on
+speed. Searches entire trees by default while ignoring Subversion,
+Git and other VCS directories and other files that aren't your
+source code.
+
+Use this to save a lot of keystrokes, since the binary is named "ag" and it
+searches the tree by default.
+
+http://geoff.greer.fm/2011/12/27/the-silver-searcher-better-than-ack
+
