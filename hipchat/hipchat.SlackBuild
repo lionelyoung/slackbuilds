@@ -6,7 +6,7 @@
 # Based on http://slackbuilds.org/template.SlackBuild
 
 PRGNAM=hipchat
-VERSION=${VERSION:-1.97.610.1} # Ephemeral version
+VERSION=${VERSION:-2.1.982}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
 
@@ -27,13 +27,10 @@ OUTPUT=${OUTPUT:-/tmp}
 
 set -e # Exit on most errors
 
-# Get the real version
-REAL_VER=$(tar -J --to-stdout --extract --file=$PRGNAM-$ARCH.tar.xz .PKGINFO | grep pkgver | awk '{print $3}' | tr '-' '.')
-
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 
-tar xvf $CWD/$PRGNAM-$ARCH.tar.xz -C $PKG
+tar xvf $CWD/$PRGNAM-$VERSION-$ARCH.pkg.tar.xz -C $PKG
 chown -R root:root $PKG
 
 # Create missing symlink for cert
@@ -49,12 +46,12 @@ rm -f $PKG/.PKGINFO
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" \
   | grep ELF | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
-mkdir -p $PKG/usr/doc/$PRGNAM-$REAL_VER
-cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$REAL_VER/$PRGNAM.SlackBuild
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
 cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$REAL_VER-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
