@@ -12,21 +12,32 @@ BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
 
 ARCH=${ARCH:-$(uname -m)}
-case "$ARCH" in
-  i?86) DEBARCH="i386" ; LIBDIRSUFFIX="" ; ARCH=i386 ;;
-  x86_64) DEBARCH="amd64" ; LIBDIRSUFFIX="64" ; ARCH=x86_64 ;;
-  *) echo "Package for $(uname -m) architecture is not available." ; exit 1 ;;
-esac
+if [ "$ARCH" = "i386" ]; then
+  DEBARCH="i386"
+  LIBDIRSUFFIX=""
+  ARCH="i386"
+elif [ "$ARCH" = "i486" ]; then
+  DEBARCH="i386"
+  LIBDIRSUFFIX=""
+  ARCH="i386"
+elif [ "$ARCH" = "x86_64" ]; then
+  DEBARCH="amd64"
+  LIBDIRSUFFIX="64"
+  ARCH="x86_64"
+else
+  echo "Package for $(uname -m) architecture is not available."
+  exit 1
+fi
 
 CWD=$(pwd)
 TMP=${TMP:-/tmp/SBo}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
 
-PLEX_USER=${PLEX_USER:-350}
-PLEX_GROUP=${PLEX_GROUP:-350}
+PLEX_USER=${PLEX_USER:-279}
+PLEX_GROUP=${PLEX_GROUP:-279}
 
-set -e # Exit on most errors
+set -e
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
@@ -92,11 +103,11 @@ chown -R $PLEX_USER:$PLEX_GROUP $PKG/var/lib/$PRGNAM
 
 mkdir -p $PKG/etc/rc.d/
 cat $CWD/rc.$PRGNAM > $PKG/etc/rc.d/rc.$PRGNAM.new
-chmod 0755 $PKG/etc/rc.d/rc.$PRGNAM.new
+chmod 0644 $PKG/etc/rc.d/rc.$PRGNAM.new
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
-[ -f $CWD/doinst.sh ] && cat $CWD/doinst.sh > $PKG/install/doinst.sh
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 # makepkg
 cd $PKG
