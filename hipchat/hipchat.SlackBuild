@@ -6,7 +6,7 @@
 # Based on http://slackbuilds.org/template.SlackBuild
 
 PRGNAM=hipchat
-VERSION=${VERSION:-2.1.1013}
+VERSION=${VERSION:-2.2.1131}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
 
