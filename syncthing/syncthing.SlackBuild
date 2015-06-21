@@ -76,7 +76,7 @@ mkdir -p $PKG/var/lib/syncthing
 mkdir -p $PKG/var/run/syncthing
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a README.txt LICENSE.txt $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a *.txt *.pdf $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
