@@ -1,0 +1,8 @@
+mktorrent is a console .torrent file creator.
+
+* Supports multiple trackers.
+* Can add a custom comment to the metainfo file.
+* Can add the private flag to dissalow DHT and Peer Exchange.
+* Can add web seed URLs.
+* Hashing can be done multi threaded and supports multiple CPUs.
+
